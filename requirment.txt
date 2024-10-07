@@ -5,14 +5,14 @@
 ● (Add a border at bottom of the Navbar) ✅
 
 ➤ Create Dynamic Category Section
-● Load all the Category Button From API and Show them in a centered position
-● on click on a certain button, Load specific Category Data
-● Integrate active button functionality for better UX
+● Load all the Category Button From API and Show them in a centered position ✅
+● on click on a certain button, Load specific Category Data ✅
+● Integrate active button functionality for better UX ✅
 
-➤ Create Dynamic Video Sections
-● Load all the videos from API
-● use the Card Layout mentioned in Design part
-● Show Video Duration (if have)
+➤ Create Dynamic Video Sections 
+● Load all the videos from API ✅
+● use the Card Layout mentioned in Design part ✅
+● Show Video Duration (if have) 
 ● Show Verified badge (if Verified)
 ● on click Show Video Details with Author info in a modal
 ● Show No Video Icon if specific category have no videos

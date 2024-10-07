@@ -1,3 +1,53 @@
+function formatYouTubeTime(postedDate) {
+    const now = new Date();
+    let date;
+
+    if (postedDate === null || postedDate === undefined || postedDate.trim() === "") {
+        return "Not defined"; // Handle missing or empty dates
+    }
+
+    if (typeof postedDate === 'number') { // Timestamp (seconds)
+        date = new Date(postedDate * 1000); 
+    } else if (typeof postedDate === 'string') {
+        if (postedDate.includes('T')) { // ISO 8601
+            date = new Date(postedDate);
+        } else {
+            // Attempt to parse other formats, but handle potential errors
+            try {
+                date = new Date(postedDate); 
+            } catch (error) {
+                console.error("Error parsing date string:", error, "Date string:", postedDate);
+                return "Invalid date"; 
+            }
+        }
+    } else {
+        console.error("Invalid date format:", postedDate);
+        return "Invalid date"; 
+    }
+
+    // ... (rest of the time calculation remains the same)
+    const seconds = Math.floor((now - date) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(months / 12);
+
+    if (seconds < 60) {
+        return "just now";
+    } else if (minutes < 60) {
+        return `${minutes} min ago`;
+    } else if (hours < 24) {
+        return `${hours} hrs ago`;
+    } else if (days < 30) {
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (months < 12) {
+        return `${months} month${months > 1 ? 's' : ''} ago`;
+    } else {
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+}
+
 const loadVideos = async () => {
     try {
         const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos');
@@ -34,6 +84,7 @@ const displayVideo = (videos) => {
             <img class="object-cover w-full h-48" src="${video.thumbnail}" alt="${video.thumbnail} image" />
             </figure>
         </div>
+
         <div class="card-body p-0 mt-5">
         <div class="flex justify-center gap-3">
             <!-- avatar -->
@@ -55,9 +106,14 @@ const displayVideo = (videos) => {
                     ${video.authors[0].profile_name} 
                     <span>${video.authors[0].verified ? `<img src="assets/verified.png" alt="Verified badge" class="inline-block w-4 h-4" />` : ''}</span>
                 </p>
+                <div class="inline-flex items-center gap-2">
                 <p class="text-sm text-[#171717B3]">
-                    ${video.others.views}
+                ${video.others.views}
                 </p>
+                <p class="text-sm text-[#171717B3]">
+                ・ ${formatYouTubeTime(video.others.posted_date)}
+                </p>
+                </div>
             </div>
         </div>
         </div>
