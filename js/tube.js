@@ -11,8 +11,18 @@ const loadVideos = async () => {
 
 const displayVideo = (videos) => {
     const videoCardContainer = document.getElementById('video-card-container');
+    const noSearchMessage = document.getElementById('no-search-message');
 
     videoCardContainer.textContent = '';
+
+    if (videos.length === 0) {
+        noSearchMessage.classList.remove('hidden');
+        videoCardContainer.classList.add('hidden');
+        return;
+    }
+
+    noSearchMessage.classList.add('hidden');
+    videoCardContainer.classList.remove('hidden');
 
     videos.forEach(video => {
         const videoCards = document.createElement('div');
