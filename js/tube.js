@@ -12,6 +12,8 @@ const loadVideos = async () => {
 const displayVideo = (videos) => {
     const videoCardContainer = document.getElementById('video-card-container');
 
+    videoCardContainer.textContent = '';
+
     videos.forEach(video => {
         const videoCards = document.createElement('div');
 
@@ -74,8 +76,29 @@ const categoriesButton = (categories) => {
         button.classList.add('btn');
         button.textContent = category.category;
 
+        button.addEventListener('click', async () => {
+            const allButtons = document.querySelectorAll('button');
+
+            allButtons.forEach(button => {
+                button.classList.remove('bg-[#FF1F3D]', 'text-white', 'font-bold');
+            });
+            button.classList.add('bg-[#FF1F3D]', 'text-white', 'font-bold');
+            await categoryWiseButton(category.category_id);
+        })
+
         categoriesContainer.append(button);
     });
+}
+
+const categoryWiseButton = async (category_id) => {
+    try {
+        const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${category_id}`)
+        const data = await res.json();
+        const videos = data.category;
+        displayVideo(videos);
+    } catch (error) {
+        console.error('Error occurs', error);
+    }
 }
 
 loadVideos();
