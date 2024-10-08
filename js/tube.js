@@ -167,5 +167,20 @@ const categoryWiseButton = async (category_id) => {
     }
 }
 
+const handleSearch = async () => {
+    const searchInput = document.getElementById('search-input');
+    const videoTitle = searchInput.value;
+
+    try {
+        const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${videoTitle}`)
+        const data = await res.json();
+        const videos = data.videos
+        console.log(videos);
+        displayVideo(videos);
+    } catch (error) {
+        console.log('Error occurs', error);
+    }
+}
+
 loadVideos();
 loadButton();

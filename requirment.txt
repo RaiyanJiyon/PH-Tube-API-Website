@@ -13,9 +13,9 @@
 ● Load all the videos from API ✅
 ● use the Card Layout mentioned in Design part ✅
 ● Show Video Duration (if have) 
-● Show Verified badge (if Verified)
+● Show Verified badge (if Verified) ✅
 ● on click Show Video Details with Author info in a modal
-● Show No Video Icon if specific category have no videos
+● Show No Video Icon if specific category have no videos ✅
 
 Additional Features
 
