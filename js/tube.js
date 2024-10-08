@@ -175,10 +175,38 @@ const handleSearch = async () => {
         const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${videoTitle}`)
         const data = await res.json();
         const videos = data.videos
-        console.log(videos);
         displayVideo(videos);
     } catch (error) {
         console.log('Error occurs', error);
+    }
+}
+
+// Corrected sorting function
+const sortedButton = async () => {
+    try {
+        const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos');
+        const data = await res.json();
+        const videos = data.videos;
+
+        // Parse views function
+        const parseViews = (viewString) => {
+            if (!viewString) return 0;
+            const number = parseFloat(viewString.replace(/[^\d.]/g, ''));
+            if (viewString.endsWith('K')) return number * 1000;
+            if (viewString.endsWith('M')) return number * 1000000;
+            return number;
+        };
+
+        // Sort videos by views
+        const sortedVideos = videos.sort((a, b) => {
+            const viewsA = parseViews(a.others?.views);
+            const viewsB = parseViews(b.others?.views);
+            return viewsB - viewsA; // Sort in descending order
+        });
+
+        displayVideo(sortedVideos);
+    } catch (error) {
+        console.error('Error sorting videos:', error);
     }
 }
 
