@@ -49,6 +49,8 @@ function formatYouTubeTime(postedDate) {
 }
 
 const loadVideos = async () => {
+    loadingSpinner(true);
+
     try {
         const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos');
         const data = await res.json();
@@ -66,6 +68,7 @@ const displayVideo = (videos) => {
     videoCardContainer.textContent = '';
 
     if (videos.length === 0) {
+        loadingSpinner(false);
         noSearchMessage.classList.remove('hidden');
         videoCardContainer.classList.add('hidden');
         return;
@@ -121,6 +124,8 @@ const displayVideo = (videos) => {
 
         videoCardContainer.append(videoCards);
     });
+
+    loadingSpinner(false);
 }
 
 const loadButton = async () => {
@@ -157,6 +162,7 @@ const categoriesButton = (categories) => {
 }
 
 const categoryWiseButton = async (category_id) => {
+    loadingSpinner(true);
     try {
         const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${category_id}`)
         const data = await res.json();
@@ -207,6 +213,17 @@ const sortedButton = async () => {
         displayVideo(sortedVideos);
     } catch (error) {
         console.error('Error sorting videos:', error);
+    }
+}
+
+// loading spinner function
+const loadingSpinner = (isLoading) => {
+    const spinner = document.getElementById('spinner');
+    
+    if (isLoading) {
+        spinner.classList.remove('hidden');
+    } else {
+        spinner.classList.add('hidden');
     }
 }
 
