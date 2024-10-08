@@ -1,3 +1,5 @@
+let currentCategoryId = null;
+
 function formatYouTubeTime(postedDate) {
     const now = new Date();
     let date;
@@ -142,24 +144,38 @@ const loadButton = async () => {
 const categoriesButton = (categories) => {
     const categoriesContainer = document.getElementById("categories-container");
 
+    const allButton = document.createElement("button");
+    allButton.classList.add('btn', 'bg-[#FF1F3D]', 'text-white', 'font-bold');
+    allButton.textContent = "All";
+    allButton.addEventListener('click', async () => {
+        currentCategoryId = null;
+        const allButtons = document.querySelectorAll('button');
+        allButtons.forEach(btn => {
+            btn.classList.remove('bg-[#FF1F3D]', 'text-white', 'font-bold');
+        });
+        allButton.classList.add('bg-[#FF1F3D]', 'text-white', 'font-bold');
+        await loadVideos();
+    });
+    categoriesContainer.appendChild(allButton);
+
     categories.forEach(category => {
         const button = document.createElement("button");
         button.classList.add('btn');
         button.textContent = category.category;
 
         button.addEventListener('click', async () => {
+            currentCategoryId = category.category_id;
             const allButtons = document.querySelectorAll('button');
-
-            allButtons.forEach(button => {
-                button.classList.remove('bg-[#FF1F3D]', 'text-white', 'font-bold');
+            allButtons.forEach(btn => {
+                btn.classList.remove('bg-[#FF1F3D]', 'text-white', 'font-bold');
             });
             button.classList.add('bg-[#FF1F3D]', 'text-white', 'font-bold');
             await categoryWiseButton(category.category_id);
-        })
+        });
 
-        categoriesContainer.append(button);
+        categoriesContainer.appendChild(button);
     });
-}
+};
 
 const categoryWiseButton = async (category_id) => {
     loadingSpinner(true);
@@ -187,12 +203,22 @@ const handleSearch = async () => {
     }
 }
 
-// Corrected sorting function
+// sorting function
 const sortedButton = async () => {
+    loadingSpinner(true);
     try {
-        const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos');
-        const data = await res.json();
-        const videos = data.videos;
+        let videos;
+        if (currentCategoryId) {
+            // Fetch and sort videos for the current category
+            const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${currentCategoryId}`);
+            const data = await res.json();
+            videos = data.category;
+        } else {
+            // Fetch and sort all videos
+            const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos');
+            const data = await res.json();
+            videos = data.videos;
+        }
 
         // Parse views function
         const parseViews = (viewString) => {
@@ -213,8 +239,10 @@ const sortedButton = async () => {
         displayVideo(sortedVideos);
     } catch (error) {
         console.error('Error sorting videos:', error);
+    } finally {
+        loadingSpinner(false);
     }
-}
+};
 
 // loading spinner function
 const loadingSpinner = (isLoading) => {
